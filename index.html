@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#F3EDE2" />
+    <meta name="description" content="3072: the 2048 puzzle, cubed. Slide tiles through a 3×3×3 cube in six directions and make the 3072 tile." />
+    <title>3072</title>
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('3072.theme');
+          var theme = saved === 'light' || saved === 'dark' ? saved : window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          document.documentElement.dataset.theme = theme;
+        } catch (e) {
+          document.documentElement.dataset.theme = 'light';
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <a class="brand" href="./" aria-label="3072, home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <polygon class="top" points="16,3 28,9.5 16,16 4,9.5"></polygon>
+            <polygon class="left" points="4,9.5 16,16 16,29 4,22.5"></polygon>
+            <polygon class="right" points="16,16 28,9.5 28,22.5 16,29"></polygon>
+          </svg>
+          <span class="wordmark">3072</span>
+        </a>
+        <div class="hud-right">
+          <div class="chip">
+            <span class="chip-label">Score</span>
+            <span class="chip-value score" id="score">0</span>
+          </div>
+          <div class="chip">
+            <span class="chip-label">Best</span>
+            <span class="chip-value" id="best">0</span>
+          </div>
+          <button class="btn btn-primary" id="btn-new" type="button">New game</button>
+          <button class="btn" id="btn-undo" type="button" disabled>Undo</button>
+          <button class="btn-icon" id="btn-theme" type="button" aria-label="Switch to dark mode" title="Switch to dark mode">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"></path>
+            </svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="main">
+        <section class="stage" id="stage" aria-label="Game board">
+          <div class="touch-controls">
+            <button class="btn btn-small" id="btn-away" type="button">Push away</button>
+            <button class="btn btn-small" id="btn-toward" type="button">Pull toward</button>
+          </div>
+          <div class="stage-bar">
+            <button class="btn btn-small" id="btn-explode" type="button" aria-pressed="false">Explode view</button>
+            <button class="btn btn-small" id="btn-recenter" type="button">Recenter</button>
+            <span class="stage-status" id="status">Move 0 · 2 tiles</span>
+          </div>
+        </section>
+
+        <aside class="rail">
+          <section class="panel">
+            <div class="panel-head">
+              <h2>Layers</h2>
+              <span class="panel-hint">seen from above</span>
+            </div>
+            <div class="layers" id="layers"></div>
+          </section>
+
+          <section class="panel">
+            <h2>Controls</h2>
+            <div class="controls">
+              <div class="control">
+                <div class="keys"><kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd><kbd>↓</kbd></div>
+                <span>Slide across the screen</span>
+              </div>
+              <div class="control">
+                <div class="keys"><kbd>W</kbd><kbd>S</kbd></div>
+                <span>Push away · pull toward you</span>
+              </div>
+              <div class="control">
+                <div class="keys"><kbd class="wide">Space</kbd></div>
+                <span>Hold to explode the layers</span>
+              </div>
+              <div class="control">
+                <div class="keys"><kbd class="wide">Drag</kbd></div>
+                <span>Orbit the cube</span>
+              </div>
+              <div class="control">
+                <div class="keys"><kbd>Z</kbd><kbd>R</kbd></div>
+                <span>Undo · new game</span>
+              </div>
+            </div>
+          </section>
+
+          <div class="note"><strong>Next tile:</strong> a 3 or a 6 appears in an empty cell after every move. Reach 3072.</div>
+        </aside>
+      </main>
+    </div>
+
+    <div class="modal-backdrop" id="modal" hidden>
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-tile" id="modal-tile">3072</div>
+        <h2 id="modal-title">You made 3072.</h2>
+        <p id="modal-body"></p>
+        <div class="modal-actions">
+          <button class="btn btn-primary" id="modal-primary" type="button">Keep going</button>
+          <button class="btn" id="modal-secondary" type="button">New game</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
